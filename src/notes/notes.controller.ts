@@ -6,16 +6,21 @@ import {
   Param,
   Patch,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { NotesService } from './notes.service';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { UpdateNoteDto } from './dto/update-note.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('notes')
 export class NotesController {
   constructor(private readonly notesService: NotesService) {}
 
+  @ApiBearerAuth()
   @Post()
+  @UseGuards(AuthGuard('jwt'))
   create(@Body() createNoteDto: CreateNoteDto) {
     return this.notesService.create(createNoteDto);
   }
